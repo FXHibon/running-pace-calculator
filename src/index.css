@@ -1,0 +1,110 @@
+@import "tailwindcss";
+
+@layer utilities {
+  /* Premium Glowing Backgrounds */
+  .glow-teal {
+    box-shadow: 0 0 40px -5px rgba(20, 184, 166, 0.15);
+  }
+  
+  .glow-coral {
+    box-shadow: 0 0 40px -5px rgba(244, 63, 94, 0.15);
+  }
+
+  .glow-text-teal {
+    text-shadow: 0 0 12px rgba(20, 184, 166, 0.4);
+  }
+
+  .glow-text-coral {
+    text-shadow: 0 0 12px rgba(244, 63, 94, 0.4);
+  }
+
+  /* Glassmorphism elements */
+  .glass-card {
+    background: rgba(15, 23, 42, 0.45);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .glass-card-hover {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .glass-card-hover:hover {
+    background: rgba(15, 23, 42, 0.65);
+    border-color: rgba(20, 184, 166, 0.25);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Custom Range Input Track & Thumb Styling */
+  .pace-slider::-webkit-slider-runnable-track {
+    background: linear-gradient(90deg, rgba(20, 184, 166, 0.1) 0%, rgba(20, 184, 166, 0.3) 100%);
+    border-radius: 9999px;
+    height: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .pace-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #14b8a6;
+    cursor: pointer;
+    margin-top: -7px;
+    border: 2px solid #ffffff;
+    box-shadow: 0 0 15px rgba(20, 184, 166, 0.8);
+    transition: transform 0.1s ease, background-color 0.2s;
+  }
+
+  .pace-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.15);
+    background: #0ea5e9;
+    box-shadow: 0 0 20px rgba(14, 165, 233, 0.9);
+  }
+
+  .pace-slider::-moz-range-track {
+    background: linear-gradient(90deg, rgba(20, 184, 166, 0.1) 0%, rgba(20, 184, 166, 0.3) 100%);
+    border-radius: 9999px;
+    height: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .pace-slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #14b8a6;
+    cursor: pointer;
+    border: 2px solid #ffffff;
+    box-shadow: 0 0 15px rgba(20, 184, 166, 0.8);
+    transition: transform 0.1s ease;
+  }
+
+  .pace-slider::-moz-range-thumb:hover {
+    transform: scale(1.15);
+  }
+}
+
+/* Custom fonts setup for clean application layout */
+.font-outfit {
+  font-family: 'Outfit', sans-serif;
+}
+
+.font-mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Abstract Neon Ambient Blobs */
+.neon-blob {
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.15;
+  pointer-events: none;
+  z-index: 0;
+}

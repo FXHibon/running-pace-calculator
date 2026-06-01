@@ -1,0 +1,13 @@
+node_modules
+npm-debug.log
+dist
+.git
+.github
+Dockerfile
+.dockerignore
+.gitignore
+README.md
+task.md
+implementation_plan.md
+walkthrough.md
+.DS_Store

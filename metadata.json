@@ -1,0 +1,15 @@
+{
+  "name": "running-pace-calculator",
+  "displayName": "PacePulse Running Pace Calculator",
+  "description": "Calculate race times for 5K, 10K, Half Marathon, and Marathon distances instantly using an interactive running pace slider.",
+  "version": "1.0.0",
+  "category": "sports",
+  "tags": [
+    "running",
+    "fitness",
+    "calculator",
+    "docker",
+    "vite",
+    "react"
+  ]
+}
