@@ -33,3 +33,6 @@ dist-ssr
 .env.development
 .env.local
 .env.staging
+
+# Antigravity CLI
+.antigravitycli

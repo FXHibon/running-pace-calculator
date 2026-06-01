@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { 
   Flame, 
@@ -9,7 +9,9 @@ import {
   Sparkles,
   Award,
   ChevronRight,
-  Info
+  Info,
+  Sun,
+  Moon
 } from 'lucide-react';
 
 // Distances in Kilometers
@@ -62,6 +64,48 @@ const PRESETS = [
 ];
 
 export default function App() {
+  // Theme state: dark or light
+  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
+    const stored = localStorage.getItem('pacepulse-theme');
+    if (stored === 'dark' || stored === 'light') return stored;
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  });
+
+  // Toggle theme handler
+  const toggleTheme = () => {
+    setTheme(prev => {
+      const next = prev === 'dark' ? 'light' : 'dark';
+      localStorage.setItem('pacepulse-theme', next);
+      return next;
+    });
+  };
+
+  // Sync theme with document class and body style
+  useEffect(() => {
+    const body = document.body;
+    if (theme === 'dark') {
+      body.classList.remove('bg-slate-50', 'text-slate-800');
+      body.classList.add('bg-slate-950', 'text-slate-100');
+      document.documentElement.classList.add('dark');
+    } else {
+      body.classList.remove('bg-slate-950', 'text-slate-100');
+      body.classList.add('bg-slate-50', 'text-slate-800');
+      document.documentElement.classList.remove('dark');
+    }
+  }, [theme]);
+
+  // Listen to system preference changes
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleChange = (e: MediaQueryListEvent) => {
+      if (!localStorage.getItem('pacepulse-theme')) {
+        setTheme(e.matches ? 'dark' : 'light');
+      }
+    };
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, []);
+
   // Default pace: 5:00 min/km (300 seconds)
   const [paceSeconds, setPaceSeconds] = useState<number>(300);
 
@@ -112,9 +156,25 @@ export default function App() {
   return (
     <div className="relative flex-1 flex flex-col justify-between py-12 px-4 sm:px-6 lg:px-8 z-10 select-none">
       
+      {/* Theme Toggle Button */}
+      <div className="absolute top-6 right-6 z-50">
+        <button
+          onClick={toggleTheme}
+          className="flex items-center justify-center p-3 rounded-xl bg-white/40 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:text-teal-600 dark:hover:text-teal-400 hover:border-teal-500/30 dark:hover:border-teal-500/30 shadow-lg backdrop-blur-md cursor-pointer transition-all duration-300 hover:scale-105 active:scale-95"
+          title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+          aria-label="Theme Toggle"
+        >
+          {theme === 'dark' ? (
+            <Sun className="w-5 h-5 transition-transform duration-500 rotate-0 hover:rotate-45" />
+          ) : (
+            <Moon className="w-5 h-5 transition-transform duration-500 rotate-0 hover:-rotate-12" />
+          )}
+        </button>
+      </div>
+      
       {/* Ambient glowing blobs in background */}
-      <div className="neon-blob top-10 left-10 bg-teal-500/20" />
-      <div className="neon-blob bottom-10 right-10 bg-rose-500/20" />
+      <div className={`neon-blob top-10 left-10 transition-colors duration-700 ${theme === 'dark' ? 'bg-teal-500/20' : 'bg-teal-500/8'}`} />
+      <div className={`neon-blob bottom-10 right-10 transition-colors duration-700 ${theme === 'dark' ? 'bg-rose-500/20' : 'bg-rose-500/8'}`} />
 
       {/* Main Container */}
       <div className="w-full max-w-5xl mx-auto flex-1 flex flex-col justify-center">
@@ -125,7 +185,7 @@ export default function App() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900/80 border border-teal-500/20 text-teal-400 text-xs font-semibold uppercase tracking-wider mb-4"
+            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/80 dark:bg-slate-900/80 border border-slate-200/80 dark:border-teal-500/20 text-teal-600 dark:text-teal-400 text-xs font-semibold uppercase tracking-wider mb-4"
           >
             <Sparkles className="w-3.5 h-3.5 animate-pulse" />
             <span>PacePulse V2.0</span>
@@ -137,7 +197,7 @@ export default function App() {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight"
           >
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-teal-400 via-cyan-400 to-blue-500 glow-text-teal">
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-teal-600 via-cyan-600 to-blue-600 dark:from-teal-400 dark:via-cyan-400 dark:to-blue-500 glow-text-teal">
               PacePulse
             </span>
           </motion.h1>
@@ -146,7 +206,7 @@ export default function App() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="mt-3 text-slate-400 text-base sm:text-lg max-w-xl mx-auto"
+            className="mt-3 text-slate-600 dark:text-slate-400 text-base sm:text-lg max-w-xl mx-auto"
           >
             Fine-tune your running pace and instantly project your ultimate target race finishes.
           </motion.p>
@@ -166,45 +226,45 @@ export default function App() {
             <div className="glass-card rounded-2xl p-6 sm:p-8 relative overflow-hidden">
               <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-teal-500/10 to-transparent rounded-bl-full pointer-events-none" />
               
-              <h2 className="text-xl font-bold flex items-center gap-2.5 text-slate-200 mb-6">
+              <h2 className="text-xl font-bold flex items-center gap-2.5 text-slate-800 dark:text-slate-200 mb-6">
                 <TrendingUp className="w-5 h-5 text-teal-400" />
                 <span>Pace Settings</span>
               </h2>
 
               {/* Digital Pace Display */}
-              <div className="flex flex-col items-center justify-center py-6 bg-slate-950/60 rounded-xl border border-slate-800/80 mb-8 relative">
+              <div className="flex flex-col items-center justify-center py-6 bg-slate-100/60 dark:bg-slate-950/60 rounded-xl border border-slate-200 dark:border-slate-800/80 mb-8 relative">
                 <span className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-1">Target Pace</span>
-                <div className="flex items-baseline gap-1 text-teal-400 glow-text-teal">
+                <div className="flex items-baseline gap-1 text-teal-600 dark:text-teal-400 glow-text-teal">
                   <span className="text-5xl sm:text-6xl font-bold font-mono tracking-tight">
                     {formatPace(paceSeconds)}
                   </span>
-                  <span className="text-lg font-medium text-slate-400 font-outfit">/km</span>
+                  <span className="text-lg font-medium text-slate-500 dark:text-slate-400 font-outfit">/km</span>
                 </div>
-                <div className="mt-3 flex gap-4 text-xs font-medium text-slate-400">
+                <div className="mt-3 flex gap-4 text-xs font-medium text-slate-500 dark:text-slate-400">
                   <span className="flex items-center gap-1">
-                    <span className="text-teal-400 font-mono">{calculateSpeedKmh(paceSeconds)}</span> km/h
+                    <span className="text-teal-600 dark:text-teal-400 font-mono">{calculateSpeedKmh(paceSeconds)}</span> km/h
                   </span>
-                  <span className="text-slate-600">|</span>
+                  <span className="text-slate-300 dark:text-slate-600">|</span>
                   <span className="flex items-center gap-1">
-                    <span className="text-sky-400 font-mono">{calculateMilePace(paceSeconds)}</span> /mile
+                    <span className="text-sky-600 dark:text-sky-400 font-mono">{calculateMilePace(paceSeconds)}</span> /mile
                   </span>
                 </div>
               </div>
 
               {/* Slider Component */}
               <div className="space-y-4 mb-6">
-                <div className="flex justify-between text-xs font-bold text-slate-400 uppercase tracking-wider px-1">
+                <div className="flex justify-between text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider px-1">
                   <span>Fast (3:00)</span>
                   <span>Slow (10:00)</span>
                 </div>
                 
-                <input
+                 <input
                   type="range"
                   min="180"
                   max="600"
                   value={paceSeconds}
                   onChange={handleSliderChange}
-                  className="w-full h-2.5 bg-slate-900 rounded-lg appearance-none cursor-pointer pace-slider transition-all duration-150"
+                  className="w-full h-2.5 bg-slate-200 dark:bg-slate-900 rounded-lg appearance-none cursor-pointer pace-slider transition-all duration-150"
                   id="pace-slider"
                   aria-label="Running Pace Slider"
                 />
@@ -214,7 +274,7 @@ export default function App() {
               <div className="flex justify-end">
                 <button
                   onClick={() => setPaceSeconds(300)}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 hover:border-teal-500/40 text-slate-400 hover:text-teal-400 text-xs font-medium transition-all duration-200 cursor-pointer"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-teal-500/40 text-slate-600 dark:text-slate-400 hover:text-teal-600 dark:hover:text-teal-400 text-xs font-medium transition-all duration-200 cursor-pointer"
                   id="btn-reset"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
@@ -225,7 +285,7 @@ export default function App() {
 
             {/* Pace Presets Panel */}
             <div className="glass-card rounded-2xl p-6 relative">
-              <h3 className="text-sm font-bold uppercase tracking-wider text-slate-400 mb-4 flex items-center gap-2">
+              <h3 className="text-sm font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-4 flex items-center gap-2">
                 <Zap className="w-4 h-4 text-amber-400" />
                 <span>Quick Training Presets</span>
               </h3>
@@ -239,8 +299,8 @@ export default function App() {
                       onClick={() => setPaceSeconds(preset.seconds)}
                       className={`flex items-center justify-between px-4 py-3 rounded-xl border text-left transition-all duration-250 cursor-pointer ${
                         isActive
-                          ? 'bg-gradient-to-r from-teal-500/15 to-cyan-500/5 border-teal-500/50 text-teal-300 shadow-[0_0_15px_-3px_rgba(20,184,166,0.25)]'
-                          : 'bg-slate-950/30 border-slate-900 hover:border-slate-800 text-slate-300 hover:text-white'
+                          ? 'bg-gradient-to-r from-teal-500/15 to-cyan-500/5 border-teal-500/50 text-teal-700 dark:text-teal-300 shadow-[0_0_15px_-3px_rgba(20,184,166,0.15)] dark:shadow-[0_0_15px_-3px_rgba(20,184,166,0.25)]'
+                          : 'bg-white/40 dark:bg-slate-950/30 border-slate-100 dark:border-slate-900 hover:border-slate-200 dark:hover:border-slate-800 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
                       }`}
                     >
                       <div className="flex flex-col">
@@ -249,7 +309,7 @@ export default function App() {
                       </div>
                       <div className="flex items-center gap-1.5">
                         {isActive && <div className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-ping" />}
-                        <ChevronRight className={`w-4 h-4 transition-transform duration-200 ${isActive ? 'text-teal-400 transform translate-x-1' : 'text-slate-600'}`} />
+                        <ChevronRight className={`w-4 h-4 transition-transform duration-200 ${isActive ? 'text-teal-600 dark:text-teal-400 transform translate-x-1' : 'text-slate-300 dark:text-slate-600'}`} />
                       </div>
                     </button>
                   );
@@ -274,29 +334,29 @@ export default function App() {
                 <div 
                   key={item.id}
                   className={`glass-card glass-card-hover rounded-2xl p-6 relative overflow-hidden flex flex-col justify-between min-h-[220px] ${
-                    isHalfOrFull ? 'border-teal-500/20 shadow-[0_0_20px_rgba(20,184,166,0.03)]' : ''
+                    isHalfOrFull ? 'border-teal-500/20 dark:border-teal-500/20 shadow-[0_0_20px_rgba(20,184,166,0.03)]' : ''
                   }`}
                 >
                   {/* Decorative corner accent gradient */}
-                  <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl ${item.color} opacity-[0.03] rounded-bl-full pointer-events-none`} />
+                  <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl ${item.color} opacity-[0.06] dark:opacity-[0.03] rounded-bl-full pointer-events-none`} />
                   
                   {/* Card Top: Icon and Name */}
                   <div className="flex items-start justify-between">
                     <div>
                       <div className="flex items-center gap-1">
-                        <span className="text-xs font-semibold text-slate-400">{item.name}</span>
+                        <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">{item.name}</span>
                         {isHalfOrFull && (
-                          <span className="px-1.5 py-0.5 rounded-md bg-teal-500/10 text-teal-400 text-[9px] font-bold uppercase tracking-wider border border-teal-500/20">
+                          <span className="px-1.5 py-0.5 rounded-md bg-teal-500/10 text-teal-700 dark:text-teal-400 text-[9px] font-bold uppercase tracking-wider border border-teal-500/20">
                             Key Race
                           </span>
                         )}
                       </div>
-                      <p className="text-[11px] text-slate-500 font-medium leading-relaxed max-w-[80%] mt-1">
+                      <p className="text-[11px] text-slate-600 dark:text-slate-500 font-medium leading-relaxed max-w-[80%] mt-1">
                         {item.description}
                       </p>
                     </div>
-                    <div className={`p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-200`}>
-                      <Icon className="w-5 h-5 text-slate-300" />
+                    <div className="p-2.5 rounded-xl bg-white/80 dark:bg-slate-900/80 border border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-200">
+                      <Icon className="w-5 h-5 text-slate-600 dark:text-slate-300" />
                     </div>
                   </div>
 
@@ -306,19 +366,19 @@ export default function App() {
                     
                     {/* Time Value */}
                     <div className="mt-1 flex items-baseline gap-1.5">
-                      <span className="text-3xl font-extrabold text-white font-mono tracking-tight">
+                      <span className="text-3xl font-extrabold text-slate-900 dark:text-white font-mono tracking-tight">
                         {times.digital}
                       </span>
                     </div>
 
-                    <div className="mt-3 flex items-center justify-between text-xs border-t border-slate-900 pt-2.5">
+                    <div className="mt-3 flex items-center justify-between text-xs border-t border-slate-100 dark:border-slate-900 pt-2.5">
                       <span className="text-slate-500 font-medium">Distance</span>
-                      <span className="font-bold text-slate-300 font-mono">{item.distance.toLocaleString()} km</span>
+                      <span className="font-bold text-slate-700 dark:text-slate-300 font-mono">{item.distance.toLocaleString()} km</span>
                     </div>
 
                     <div className="mt-1.5 flex items-center justify-between text-xs">
                       <span className="text-slate-500 font-medium">Avg Speed</span>
-                      <span className="font-bold text-slate-300 font-mono">{calculateSpeedKmh(paceSeconds)} km/h</span>
+                      <span className="font-bold text-slate-700 dark:text-slate-300 font-mono">{calculateSpeedKmh(paceSeconds)} km/h</span>
                     </div>
                   </div>
                 </div>
@@ -333,15 +393,15 @@ export default function App() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.5 }}
-          className="mt-8 glass-card rounded-2xl p-5 flex items-start gap-4 max-w-3xl mx-auto border-teal-500/10"
+          className="mt-8 glass-card rounded-2xl p-5 flex items-start gap-4 max-w-3xl mx-auto border-teal-500/20 dark:border-teal-500/10"
         >
-          <div className="p-2.5 rounded-xl bg-teal-500/10 border border-teal-500/20 text-teal-400 shrink-0">
+          <div className="p-2.5 rounded-xl bg-teal-500/10 border border-teal-500/20 text-teal-600 dark:text-teal-400 shrink-0">
             <Info className="w-4 h-4" />
           </div>
           <div>
-            <h4 className="text-sm font-bold text-teal-300">Runners Pro-Tip</h4>
-            <p className="text-xs text-slate-400 mt-1 leading-relaxed">
-              Marathon projections are highly dependent on volume and endurance. A standard projection assumes sufficient weekly mileage. If you're targeting a sub-4 hour marathon, target a pace faster than <strong className="text-teal-400 font-mono">5:41 min/km</strong>.
+            <h4 className="text-sm font-bold text-teal-700 dark:text-teal-300">Runners Pro-Tip</h4>
+            <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 leading-relaxed">
+              Marathon projections are highly dependent on volume and endurance. A standard projection assumes sufficient weekly mileage. If you're targeting a sub-4 hour marathon, target a pace faster than <strong className="text-teal-600 dark:text-teal-400 font-mono">5:41 min/km</strong>.
             </p>
           </div>
         </motion.div>
@@ -349,7 +409,7 @@ export default function App() {
       </div>
 
       {/* Footer */}
-      <footer className="mt-12 text-center text-[11px] font-semibold text-slate-600 uppercase tracking-widest relative z-10">
+      <footer className="mt-12 text-center text-[11px] font-semibold text-slate-400 dark:text-slate-600 uppercase tracking-widest relative z-10">
         <p>&copy; {new Date().getFullYear()} PacePulse App. Engineered for High-performance Athletes.</p>
       </footer>
     </div>
