@@ -11,57 +11,150 @@ import {
   ChevronRight,
   Info,
   Sun,
-  Moon
+  Moon,
+  Globe
 } from 'lucide-react';
 
-// Distances in Kilometers
+// Distances in Kilometers (referencing translation keys)
 const DISTANCES = [
   { 
     id: '5k', 
-    name: '5K Run', 
+    nameKey: 'run5k' as const, 
     distance: 5.0, 
-    description: 'A fast-paced sprint. Tests aerobic capacity.',
+    descKey: 'desc5k' as const,
     icon: Flame,
     color: 'from-orange-500 to-amber-500',
     glowColor: 'glow-coral'
   },
   { 
     id: '10k', 
-    name: '10K Run', 
+    nameKey: 'run10k' as const, 
     distance: 10.0, 
-    description: 'Perfect balance of speed and stamina.',
+    descKey: 'desc10k' as const,
     icon: Zap,
     color: 'from-teal-400 to-emerald-500',
     glowColor: 'glow-teal'
   },
   { 
     id: 'half-marathon', 
-    name: 'Half Marathon', 
+    nameKey: 'runHalf' as const, 
     distance: 21.0975, 
-    description: 'A true endurance milestone (13.1 miles).',
+    descKey: 'descHalf' as const,
     icon: Gauge,
     color: 'from-cyan-500 to-blue-500',
     glowColor: 'glow-teal'
   },
   { 
     id: 'marathon', 
-    name: 'Marathon', 
+    nameKey: 'runMarathon' as const, 
     distance: 42.195, 
-    description: 'The ultimate standard of legendary running (26.2 miles).',
+    descKey: 'descMarathon' as const,
     icon: Award,
     color: 'from-rose-500 to-pink-500',
     glowColor: 'glow-coral'
   }
 ];
 
-// Presets (seconds per km)
+// Presets (seconds per km, referencing translation keys)
 const PRESETS = [
-  { name: 'Elite Pace (3:30)', seconds: 210, type: 'Intervals' },
-  { name: 'Tempo Run (4:15)', seconds: 255, type: 'Threshold' },
-  { name: 'Half Goal (5:00)', seconds: 300, type: 'Moderate' },
-  { name: 'Marathon Goal (5:30)', seconds: 330, type: 'Aerobic' },
-  { name: 'Easy Jog (6:30)', seconds: 390, type: 'Recovery' }
+  { nameKey: 'presetElite' as const, seconds: 210, typeKey: 'typeIntervals' as const },
+  { nameKey: 'presetTempo' as const, seconds: 255, typeKey: 'typeThreshold' as const },
+  { nameKey: 'presetHalf' as const, seconds: 300, typeKey: 'typeModerate' as const },
+  { nameKey: 'presetMarathon' as const, seconds: 330, typeKey: 'typeAerobic' as const },
+  { nameKey: 'presetEasy' as const, seconds: 390, typeKey: 'typeRecovery' as const }
 ];
+
+// Translations Dictionary for English and French
+const TRANSLATIONS = {
+  en: {
+    appVersion: 'PacePulse V2.0',
+    title: 'PacePulse',
+    subtitle: 'Fine-tune your running pace and instantly project your ultimate target race finishes.',
+    settingsTitle: 'Pace Settings',
+    targetPace: 'Target Pace',
+    perKm: '/km',
+    perMile: '/mile',
+    fast: 'Fast (3:00)',
+    slow: 'Slow (10:00)',
+    resetBtn: 'Reset to 5:00',
+    presetsTitle: 'Quick Training Presets',
+    projectedTime: 'Projected Time',
+    distanceLabel: 'Distance',
+    avgSpeedLabel: 'Avg Speed',
+    proTipTitle: 'Runners Pro-Tip',
+    proTipDesc: 'Marathon projections are highly dependent on volume and endurance. A standard projection assumes sufficient weekly mileage. If you\'re targeting a sub-4 hour marathon, target a pace faster than {pace} min/km.',
+    footerText: '© {year} PacePulse App. Engineered for High-performance Athletes.',
+    keyRace: 'Key Race',
+    
+    // Distances
+    run5k: '5K Run',
+    desc5k: 'A fast-paced sprint. Tests aerobic capacity.',
+    run10k: '10K Run',
+    desc10k: 'Perfect balance of speed and stamina.',
+    runHalf: 'Half Marathon',
+    descHalf: 'A true endurance milestone (13.1 miles).',
+    runMarathon: 'Marathon',
+    descMarathon: 'The ultimate standard of legendary running (26.2 miles).',
+
+    // Presets
+    presetElite: 'Elite Pace (3:30)',
+    presetTempo: 'Tempo Run (4:15)',
+    presetHalf: 'Half Goal (5:00)',
+    presetMarathon: 'Marathon Goal (5:30)',
+    presetEasy: 'Easy Jog (6:30)',
+
+    // Preset types
+    typeIntervals: 'Intervals',
+    typeThreshold: 'Threshold',
+    typeModerate: 'Moderate',
+    typeAerobic: 'Aerobic',
+    typeRecovery: 'Recovery',
+  },
+  fr: {
+    appVersion: 'PacePulse V2.0',
+    title: 'PacePulse',
+    subtitle: 'Ajustez votre allure de course et projetez instantanément vos temps de passage cibles.',
+    settingsTitle: 'Réglages de l\'Allure',
+    targetPace: 'Allure Cible',
+    perKm: '/km',
+    perMile: '/mille',
+    fast: 'Rapide (3:00)',
+    slow: 'Lent (10:00)',
+    resetBtn: 'Réinitialiser à 5:00',
+    presetsTitle: 'Allures Prédéfinies',
+    projectedTime: 'Temps Projeté',
+    distanceLabel: 'Distance',
+    avgSpeedLabel: 'Vitesse Moyenne',
+    proTipTitle: 'Conseil de Coureur',
+    proTipDesc: 'Les projections de marathon dépendent fortement du volume et de l\'endurance. Une projection standard suppose un kilométrage hebdomadaire suffisant. Si vous visez un marathon en moins de 4 heures, ciblez une allure plus rapide que {pace} min/km.',
+    footerText: '© {year} PacePulse App. Conçu pour les athlètes de haut niveau.',
+    keyRace: 'Course Clé',
+    
+    // Distances
+    run5k: 'Course 5K',
+    desc5k: 'Un sprint rapide. Teste la capacité aérobie.',
+    run10k: 'Course 10K',
+    desc10k: 'Équilibre parfait entre vitesse et endurance.',
+    runHalf: 'Semi-Marathon',
+    descHalf: 'Un véritable jalon d\'endurance (13,1 miles).',
+    runMarathon: 'Marathon',
+    descMarathon: 'L\'épreuve reine de la course sur route (26,2 miles).',
+
+    // Presets
+    presetElite: 'Allure Élite (3:30)',
+    presetTempo: 'Course Tempo (4:15)',
+    presetHalf: 'Objectif Semi (5:00)',
+    presetMarathon: 'Objectif Marathon (5:30)',
+    presetEasy: 'Footing Facile (6:30)',
+
+    // Preset types
+    typeIntervals: 'Fractionné',
+    typeThreshold: 'Seuil',
+    typeModerate: 'Modéré',
+    typeAerobic: 'Aérobie',
+    typeRecovery: 'Récupération',
+  }
+} as const;
 
 export default function App() {
   // Theme state: dark or light
@@ -69,6 +162,15 @@ export default function App() {
     const stored = localStorage.getItem('pacepulse-theme');
     if (stored === 'dark' || stored === 'light') return stored;
     return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  });
+
+  // Language state: defaults to browser language, fallbacks to 'en'
+  const [lang, setLang] = useState<'en' | 'fr'>(() => {
+    if (typeof navigator === 'undefined') return 'en';
+    const browserLang = navigator.language || (navigator.languages && navigator.languages[0]);
+    if (!browserLang) return 'en';
+    const prefix = browserLang.toLowerCase().split('-')[0];
+    return prefix === 'fr' ? 'fr' : 'en';
   });
 
   // Toggle theme handler
@@ -80,16 +182,11 @@ export default function App() {
     });
   };
 
-  // Sync theme with document class and body style
+  // Sync theme with document class
   useEffect(() => {
-    const body = document.body;
     if (theme === 'dark') {
-      body.classList.remove('bg-slate-50', 'text-slate-800');
-      body.classList.add('bg-slate-950', 'text-slate-100');
       document.documentElement.classList.add('dark');
     } else {
-      body.classList.remove('bg-slate-950', 'text-slate-100');
-      body.classList.add('bg-slate-50', 'text-slate-800');
       document.documentElement.classList.remove('dark');
     }
   }, [theme]);
@@ -108,6 +205,17 @@ export default function App() {
 
   // Default pace: 5:00 min/km (300 seconds)
   const [paceSeconds, setPaceSeconds] = useState<number>(300);
+
+  // Translation helper function
+  const t = (key: keyof typeof TRANSLATIONS.en, replaces?: Record<string, string | number>) => {
+    let text: string = TRANSLATIONS[lang][key] || TRANSLATIONS.en[key];
+    if (replaces) {
+      Object.entries(replaces).forEach(([k, v]) => {
+        text = text.replace(`{${k}}`, String(v));
+      });
+    }
+    return text;
+  };
 
   // Convert seconds to MM:SS pace string
   const formatPace = (secs: number) => {
@@ -154,10 +262,22 @@ export default function App() {
   };
 
   return (
-    <div className="relative flex-1 flex flex-col justify-between py-12 px-4 sm:px-6 lg:px-8 z-10 select-none">
+    <div className="relative flex-1 flex flex-col justify-between py-12 px-4 sm:px-6 lg:px-8 z-10 select-none overflow-x-hidden">
       
-      {/* Theme Toggle Button */}
-      <div className="absolute top-6 right-6 z-50">
+      {/* Settings / Controls Header Panel */}
+      <div className="absolute top-6 right-6 z-50 flex items-center gap-2">
+        {/* Language Switcher Button */}
+        <button
+          onClick={() => setLang(prev => prev === 'en' ? 'fr' : 'en')}
+          className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-white/40 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:text-teal-600 dark:hover:text-teal-400 hover:border-teal-500/30 dark:hover:border-teal-500/30 shadow-lg backdrop-blur-md cursor-pointer transition-all duration-300 hover:scale-105 active:scale-95 text-xs font-bold uppercase tracking-wider"
+          title={lang === 'en' ? 'Passer en Français' : 'Switch to English'}
+          aria-label="Language Toggle"
+        >
+          <Globe className="w-4 h-4 text-slate-500 dark:text-slate-400" />
+          <span>{lang === 'en' ? 'FR' : 'EN'}</span>
+        </button>
+
+        {/* Theme Toggle Button */}
         <button
           onClick={toggleTheme}
           className="flex items-center justify-center p-3 rounded-xl bg-white/40 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:text-teal-600 dark:hover:text-teal-400 hover:border-teal-500/30 dark:hover:border-teal-500/30 shadow-lg backdrop-blur-md cursor-pointer transition-all duration-300 hover:scale-105 active:scale-95"
@@ -188,7 +308,7 @@ export default function App() {
             className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/80 dark:bg-slate-900/80 border border-slate-200/80 dark:border-teal-500/20 text-teal-600 dark:text-teal-400 text-xs font-semibold uppercase tracking-wider mb-4"
           >
             <Sparkles className="w-3.5 h-3.5 animate-pulse" />
-            <span>PacePulse V2.0</span>
+            <span>{t('appVersion')}</span>
           </motion.div>
           
           <motion.h1 
@@ -198,7 +318,7 @@ export default function App() {
             className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight"
           >
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-teal-600 via-cyan-600 to-blue-600 dark:from-teal-400 dark:via-cyan-400 dark:to-blue-500 glow-text-teal">
-              PacePulse
+              {t('title')}
             </span>
           </motion.h1>
           
@@ -208,7 +328,7 @@ export default function App() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="mt-3 text-slate-600 dark:text-slate-400 text-base sm:text-lg max-w-xl mx-auto"
           >
-            Fine-tune your running pace and instantly project your ultimate target race finishes.
+            {t('subtitle')}
           </motion.p>
         </header>
 
@@ -228,17 +348,17 @@ export default function App() {
               
               <h2 className="text-xl font-bold flex items-center gap-2.5 text-slate-800 dark:text-slate-200 mb-6">
                 <TrendingUp className="w-5 h-5 text-teal-400" />
-                <span>Pace Settings</span>
+                <span>{t('settingsTitle')}</span>
               </h2>
 
               {/* Digital Pace Display */}
               <div className="flex flex-col items-center justify-center py-6 bg-slate-100/60 dark:bg-slate-950/60 rounded-xl border border-slate-200 dark:border-slate-800/80 mb-8 relative">
-                <span className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-1">Target Pace</span>
+                <span className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-1">{t('targetPace')}</span>
                 <div className="flex items-baseline gap-1 text-teal-600 dark:text-teal-400 glow-text-teal">
                   <span className="text-5xl sm:text-6xl font-bold font-mono tracking-tight">
                     {formatPace(paceSeconds)}
                   </span>
-                  <span className="text-lg font-medium text-slate-500 dark:text-slate-400 font-outfit">/km</span>
+                  <span className="text-lg font-medium text-slate-500 dark:text-slate-400 font-outfit">{t('perKm')}</span>
                 </div>
                 <div className="mt-3 flex gap-4 text-xs font-medium text-slate-500 dark:text-slate-400">
                   <span className="flex items-center gap-1">
@@ -246,7 +366,7 @@ export default function App() {
                   </span>
                   <span className="text-slate-300 dark:text-slate-600">|</span>
                   <span className="flex items-center gap-1">
-                    <span className="text-sky-600 dark:text-sky-400 font-mono">{calculateMilePace(paceSeconds)}</span> /mile
+                    <span className="text-sky-600 dark:text-sky-400 font-mono">{calculateMilePace(paceSeconds)}</span> {t('perMile')}
                   </span>
                 </div>
               </div>
@@ -254,8 +374,8 @@ export default function App() {
               {/* Slider Component */}
               <div className="space-y-4 mb-6">
                 <div className="flex justify-between text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider px-1">
-                  <span>Fast (3:00)</span>
-                  <span>Slow (10:00)</span>
+                  <span>{t('fast')}</span>
+                  <span>{t('slow')}</span>
                 </div>
                 
                  <input
@@ -278,7 +398,7 @@ export default function App() {
                   id="btn-reset"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
-                  <span>Reset to 5:00</span>
+                  <span>{t('resetBtn')}</span>
                 </button>
               </div>
             </div>
@@ -287,7 +407,7 @@ export default function App() {
             <div className="glass-card rounded-2xl p-6 relative">
               <h3 className="text-sm font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-4 flex items-center gap-2">
                 <Zap className="w-4 h-4 text-amber-400" />
-                <span>Quick Training Presets</span>
+                <span>{t('presetsTitle')}</span>
               </h3>
               
               <div className="flex flex-col gap-2.5">
@@ -295,7 +415,7 @@ export default function App() {
                   const isActive = paceSeconds === preset.seconds;
                   return (
                     <button
-                      key={preset.name}
+                      key={preset.nameKey}
                       onClick={() => setPaceSeconds(preset.seconds)}
                       className={`flex items-center justify-between px-4 py-3 rounded-xl border text-left transition-all duration-250 cursor-pointer ${
                         isActive
@@ -304,8 +424,8 @@ export default function App() {
                       }`}
                     >
                       <div className="flex flex-col">
-                        <span className="text-sm font-bold">{preset.name}</span>
-                        <span className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider mt-0.5">{preset.type}</span>
+                        <span className="text-sm font-bold">{t(preset.nameKey)}</span>
+                        <span className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider mt-0.5">{t(preset.typeKey)}</span>
                       </div>
                       <div className="flex items-center gap-1.5">
                         {isActive && <div className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-ping" />}
@@ -344,15 +464,15 @@ export default function App() {
                   <div className="flex items-start justify-between">
                     <div>
                       <div className="flex items-center gap-1">
-                        <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">{item.name}</span>
+                        <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">{t(item.nameKey)}</span>
                         {isHalfOrFull && (
                           <span className="px-1.5 py-0.5 rounded-md bg-teal-500/10 text-teal-700 dark:text-teal-400 text-[9px] font-bold uppercase tracking-wider border border-teal-500/20">
-                            Key Race
+                            {t('keyRace')}
                           </span>
                         )}
                       </div>
                       <p className="text-[11px] text-slate-600 dark:text-slate-500 font-medium leading-relaxed max-w-[80%] mt-1">
-                        {item.description}
+                        {t(item.descKey)}
                       </p>
                     </div>
                     <div className="p-2.5 rounded-xl bg-white/80 dark:bg-slate-900/80 border border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-200">
@@ -362,7 +482,7 @@ export default function App() {
 
                   {/* Card Bottom: Times and Pace Projector */}
                   <div className="mt-8">
-                    <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest">Projected Time</span>
+                    <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest">{t('projectedTime')}</span>
                     
                     {/* Time Value */}
                     <div className="mt-1 flex items-baseline gap-1.5">
@@ -372,12 +492,12 @@ export default function App() {
                     </div>
 
                     <div className="mt-3 flex items-center justify-between text-xs border-t border-slate-100 dark:border-slate-900 pt-2.5">
-                      <span className="text-slate-500 font-medium">Distance</span>
-                      <span className="font-bold text-slate-700 dark:text-slate-300 font-mono">{item.distance.toLocaleString()} km</span>
+                      <span className="text-slate-500 font-medium">{t('distanceLabel')}</span>
+                      <span className="font-bold text-slate-700 dark:text-slate-300 font-mono">{item.distance.toLocaleString(lang === 'fr' ? 'fr-FR' : 'en-US')} km</span>
                     </div>
 
                     <div className="mt-1.5 flex items-center justify-between text-xs">
-                      <span className="text-slate-500 font-medium">Avg Speed</span>
+                      <span className="text-slate-500 font-medium">{t('avgSpeedLabel')}</span>
                       <span className="font-bold text-slate-700 dark:text-slate-300 font-mono">{calculateSpeedKmh(paceSeconds)} km/h</span>
                     </div>
                   </div>
@@ -399,9 +519,9 @@ export default function App() {
             <Info className="w-4 h-4" />
           </div>
           <div>
-            <h4 className="text-sm font-bold text-teal-700 dark:text-teal-300">Runners Pro-Tip</h4>
+            <h4 className="text-sm font-bold text-teal-700 dark:text-teal-300">{t('proTipTitle')}</h4>
             <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 leading-relaxed">
-              Marathon projections are highly dependent on volume and endurance. A standard projection assumes sufficient weekly mileage. If you're targeting a sub-4 hour marathon, target a pace faster than <strong className="text-teal-600 dark:text-teal-400 font-mono">5:41 min/km</strong>.
+              {t('proTipDesc', { pace: '5:41' })}
             </p>
           </div>
         </motion.div>
@@ -410,7 +530,7 @@ export default function App() {
 
       {/* Footer */}
       <footer className="mt-12 text-center text-[11px] font-semibold text-slate-400 dark:text-slate-600 uppercase tracking-widest relative z-10">
-        <p>&copy; {new Date().getFullYear()} PacePulse App. Engineered for High-performance Athletes.</p>
+        <p>{t('footerText', { year: new Date().getFullYear() })}</p>
       </footer>
     </div>
   );

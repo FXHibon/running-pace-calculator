@@ -20,8 +20,22 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Theme setup to prevent Flash of Unstyled Content (FOUC) -->
+    <meta name="color-scheme" content="light dark">
+    <script>
+      (function() {
+        const stored = localStorage.getItem('pacepulse-theme');
+        const theme = stored || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        if (theme === 'dark') {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      })();
+    </script>
   </head>
-  <body class="h-full bg-slate-950 text-slate-100 antialiased font-outfit overflow-x-hidden">
+  <body class="h-full bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 antialiased font-outfit overflow-x-hidden transition-colors duration-500">
     <div id="root" class="min-h-screen flex flex-col"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
